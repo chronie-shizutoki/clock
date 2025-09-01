@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock Example</title>
+    <link rel="stylesheet" href="clock.css">
+</head>
+<body>
+    <div style="text-align: center; margin-top: 50px;">
+        <h1>Digital Clock Example</h1>
+        <div id="clockContainer"></div>
+        <div style="margin-top: 20px;">
+            <select id="languageSelector">
+                <option value="en-US">English</option>
+                <option value="zh-CN">中文</option>
+                <option value="zh-TW">中文（台湾）</option>
+                <option value="zh-HK">中文（香港）</option>
+                <option value="fr-FR">Français</option>
+                <option value="de-DE">Deutsch</option>
+                <option value="ja-JP">日本語</option>
+                <option value="ko-KR">한국어</option>
+                <option value="ru-RU">Русский</option>
+                <option value="it-IT">Italiano</option>
+                <option value="pt-BR">Português</option>
+                <option value="ar-SA">العربية</option>
+                <option value="hi-IN">हिन्दी</option>
+                <option value="bn-BD">বাংলা</option>
+                <option value="pa-IN">ਪੰਜਾਬੀ</option>
+                <option value="ur-PK">اردو</option>
+                <option value="tr-TR">Türkçe</option>
+                <option value="nl-NL">Nederlands</option>
+                <option value="pl-PL">Polski</option>
+                <option value="sv-SE">Svenska</option>
+                <option value="da-DK">Dansk</option>
+                <option value="no-NO">Norsk</option>
+                <option value="fi-FI">Suomi</option>
+                <option value="cs-CZ">Čeština</option>
+                <option value="sk-SK">Slovenčina</option>
+                <option value="hu-HU">Magyar</option>
+                <option value="ro-RO">Română</option>
+                <option value="el-GR">Ελληνικά</option>
+                <option value="he-IL">עברית</option>
+                <option value="th-TH">ไทย</option>
+                <option value="vi-VN">Tiếng Việt</option>
+                <option value="id-ID">Bahasa Indonesia</option>
+                <option value="ms-MY">Bahasa Melayu</option>
+                <option value="fil-PH">Filipino</option>
+                <option value="fa-IR">فارسی</option>
+                <option value="sw-KE">Kiswahili</option>
+                <option value="am-ET">አማርኛ</option>
+                <option value="te-IN">తెలుగు</option>
+                <option value="ta-IN">தமிழ்</option>
+                <option value="mr-IN">मराठी</option>
+                <option value="gu-IN">ગુજરાતી</option>
+                <option value="kn-IN">ಕನ್ನಡ</option>
+                <option value="ml-IN">മലയാളം</option>
+                <option value="or-IN">ଓଡ଼ିଆ</option>
+                <option value="as-IN">অসমীয়া</option>
+                <option value="ne-NP">नेपाली</option>
+                <option value="si-LK">සිංහල</option>
+                <option value="my-MM">မြန်မာ</option>
+                <option value="km-KH">ខ្មែរ</option>
+                <option value="lo-LA">ລາວ</option>
+                <option value="la-VA">Latin</option>
+                <option value="is-IS">Íslenska</option>
+                <option value="lt-LT">Lietuvių</option>
+                <option value="lv-LV">Latviešu</option>
+                <option value="et-EE">Eesti</option>
+                <option value="hr-HR">Hrvatski</option>
+                <option value="sl-SI">Slovenščina</option>
+                <option value="bs-BA">Bosanski</option>
+                <option value="sr-RS">Српски</option>
+                <option value="bg-BG">Български</option>
+                <option value="uk-UA">Українська</option>
+                <option value="be-BY">Беларуская</option>
+                <option value="ka-GE">ქართული</option>
+                <option value="hy-AM">Հայերեն</option>
+                <option value="az-AZ">Azərbaycan</option>
+                <option value="kk-KZ">Қазақша</option>
+                <option value="uz-UZ">Oʻzbekcha</option>
+                <option value="tg-TJ">Тоҷикӣ</option>
+                <option value="mi-NZ">Te Reo Māori</option>
+                <option value="sm-SM">Gagana Samoa</option>
+                <option value="to-TO">Tongan</option>
+                <option value="sm-SM">Gagana Samoa</option>
+
+    <script src="clock.js"></script>
+    <script>
+        // Add language toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const languageSelector = document.getElementById('languageSelector');
+            let currentLang = languageSelector.value;
+
+            languageSelector.addEventListener('change', function() {
+                currentLang = this.value;
+                document.dispatchEvent(new CustomEvent('i18nLanguageChanged', {
+                    detail: { locale: currentLang }
+                }));
+            });
+
+            // Initialize i18n
+            window.i18n = { locale: currentLang };
+            document.dispatchEvent(new Event('i18nInitialized'));
+        });
+    </script>
+</body>
+</html>
