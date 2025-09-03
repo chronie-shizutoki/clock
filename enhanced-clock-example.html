@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>增强版时钟组件</title>
+    <link rel="stylesheet" href="enhanced-clock.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: #f0f0f0;
+        }
+        
+        .demo-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            max-width: 300px;
+            z-index: 10000;
+        }
+        
+        .demo-info h4 {
+            margin: 0 0 10px 0;
+            color: #00ffff;
+        }
+        
+        .demo-info ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .demo-info li {
+            margin-bottom: 5px;
+        }
+        
+        .keyboard-shortcuts {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-info">
+        <h4>功能说明</h4>
+        <ul>
+            <li>数字/模拟时钟切换</li>
+            <li>多主题支持（浅色/深色/霓虹）</li>
+            <li>时区选择</li>
+            <li>秒表功能</li>
+            <li>倒计时功能</li>
+            <li>闹钟功能</li>
+            <li>全屏模式</li>
+            <li>设置自动保存</li>
+        </ul>
+        <div class="keyboard-shortcuts">
+            <strong>快捷键：</strong><br>
+            Ctrl+F: 全屏切换<br>
+            Ctrl+M: 时钟模式切换<br>
+            Ctrl+T: 主题切换
+        </div>
+    </div>
+
+    <script src="enhanced-clock.js"></script>
+    <script>
+        // Language selector integration (if needed)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize i18n system
+            window.i18n = { locale: 'zh-CN' };
+            document.dispatchEvent(new Event('i18nInitialized'));
+            
+            // Add particle effects
+            function createParticles() {
+                const clockArea = document.querySelector('.clock-display-area');
+                if (!clockArea) return;
+                
+                const particlesContainer = document.createElement('div');
+                particlesContainer.className = 'background-particles';
+                particlesContainer.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                    z-index: 1;
+                `;
+                
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.cssText = `
+                        position: absolute;
+                        width: ${Math.random() * 4 + 2}px;
+                        height: ${Math.random() * 4 + 2}px;
+                        background: rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2});
+                        border-radius: 50%;
+                        left: ${Math.random() * 100}%;
+                        top: ${Math.random() * 100}%;
+                        animation: float ${Math.random() * 10 + 10}s infinite linear;
+                        --tx: ${(Math.random() - 0.5) * 200}px;
+                        --ty: ${(Math.random() - 0.5) * 200}px;
+                    `;
+                    particlesContainer.appendChild(particle);
+                }
+                
+                clockArea.appendChild(particlesContainer);
+            }
+            
+            // Create particles after a short delay
+            setTimeout(createParticles, 1000);
+        });
+        
+        // Handle fullscreen change events
+        document.addEventListener('fullscreenchange', function() {
+            if (enhancedClock) {
+                enhancedClock.isFullscreen = !!document.fullscreenElement;
+                if (enhancedClock.isFullscreen) {
+                    enhancedClock.container.classList.add('fullscreen');
+                } else {
+                    enhancedClock.container.classList.remove('fullscreen');
+                }
+            }
+        });
+        
+        // Handle visibility change to pause/resume timers when tab is not visible
+        document.addEventListener('visibilitychange', function() {
+            if (enhancedClock) {
+                if (document.hidden) {
+                    // Tab is hidden, could pause non-essential animations
+                    console.log('Tab hidden - timers continue running');
+                } else {
+                    // Tab is visible again
+                    console.log('Tab visible - all features active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
