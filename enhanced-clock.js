@@ -1,14 +1,14 @@
 // Enhanced Clock Component with multiple features
 class EnhancedClock {
-    constructor(language = 'en-US') {
+    constructor(language = i18n.currentLocale) {
         this.language = language;
-        this.clockMode = 'digital'; // 'digital' or 'analog'
-        this.theme = 'light'; // 'light' or 'dark'
-        this.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        this.is24Hour = true;
-        this.showSeconds = true;
+        this.clockMode = localStorage.getItem("clockMode") || 'digital'; // 'digital' or 'analog'
+        this.theme = localStorage.getItem("theme") || 'light'; // 'light' or 'dark'
+        this.timezone = localStorage.getItem("timezone") || Intl.DateTimeFormat().resolvedOptions().timeZone;
+        this.is24Hour = localStorage.getItem("is24Hour") === 'true';
+        this.showSeconds = localStorage.getItem("showSeconds") === 'true';
         this.isFullscreen = false;
-        this.soundEnabled = true;
+        this.soundEnabled = localStorage.getItem("soundEnabled") === 'true';
         
         // Timer states
         this.stopwatchTime = 0;
@@ -20,7 +20,7 @@ class EnhancedClock {
         this.countdownRunning = false;
         
         // Alarm states
-        this.alarms = [];
+        this.alarms = JSON.parse(localStorage.getItem("alarms")) || [];
         this.alarmSound = null;
         
         this.container = null;
@@ -44,93 +44,93 @@ class EnhancedClock {
             <div class="clock-wrapper">
                 <div class="control-panel" id="controlPanel">
                     <div class="panel-header">
-                        <h3>时钟设置</h3>
+                        <h3 data-i18n="clock_settings"></h3>
                         <button class="panel-toggle" id="panelToggle">⚙️</button>
                     </div>
                     <div class="panel-content" id="panelContent">
                         <div class="control-group">
-                            <label>显示模式:</label>
+                            <label data-i18n="display_mode"></label>
                             <select id="clockModeSelect">
-                                <option value="digital">数字时钟</option>
-                                <option value="analog">模拟时钟</option>
+                                <option value="digital" data-i18n="digital_clock"></option>
+                                <option value="analog" data-i18n="analog_clock"></option>
                             </select>
                         </div>
                         
                         <div class="control-group">
-                            <label>主题:</label>
+                            <label data-i18n="theme"></label>
                             <select id="themeSelect">
-                                <option value="light">浅色</option>
-                                <option value="dark">深色</option>
-                                <option value="neon">霓虹</option>
+                                <option value="light" data-i18n="light"></option>
+                                <option value="dark" data-i18n="dark"></option>
+                                <option value="neon" data-i18n="neon"></option>
                             </select>
                         </div>
                         
                         <div class="control-group">
-                            <label>时区:</label>
+                            <label data-i18n="timezone"></label>
                             <select id="timezoneSelect">
-                                <option value="Asia/Shanghai">北京时间</option>
-                                <option value="America/New_York">纽约时间</option>
-                                <option value="Europe/London">伦敦时间</option>
-                                <option value="Asia/Tokyo">东京时间</option>
-                                <option value="Australia/Sydney">悉尼时间</option>
-                                <option value="Europe/Paris">巴黎时间</option>
-                                <option value="America/Los_Angeles">洛杉矶时间</option>
+                                <option value="Asia/Shanghai" data-i18n="beijing_time"></option>
+                                <option value="America/New_York" data-i18n="new_york_time"></option>
+                                <option value="Europe/London" data-i18n="london_time"></option>
+                                <option value="Asia/Tokyo" data-i18n="tokyo_time"></option>
+                                <option value="Australia/Sydney" data-i18n="sydney_time"></option>
+                                <option value="Europe/Paris" data-i18n="paris_time"></option>
+                                <option value="America/Los_Angeles" data-i18n="los_angeles_time"></option>
                             </select>
                         </div>
                         
                         <div class="control-group">
                             <label>
-                                <input type="checkbox" id="format24Hour" checked> 24小时制
+                                <input type="checkbox" id="format24Hour"> <span data-i18n="24_hour_format"></span>
                             </label>
                         </div>
                         
                         <div class="control-group">
                             <label>
-                                <input type="checkbox" id="showSecondsCheck" checked> 显示秒
+                                <input type="checkbox" id="showSecondsCheck"> <span data-i18n="show_seconds"></span>
                             </label>
                         </div>
                         
                         <div class="control-group">
                             <label>
-                                <input type="checkbox" id="soundEnabledCheck" checked> 音效
+                                <input type="checkbox" id="soundEnabledCheck"> <span data-i18n="sound_effects"></span>
                             </label>
                         </div>
                         
                         <div class="control-group">
-                            <button id="fullscreenBtn">全屏模式</button>
+                            <button id="fullscreenBtn" data-i18n="fullscreen_mode"></button>
                         </div>
                         
                         <div class="timer-controls">
-                            <h4>计时器</h4>
+                            <h4 data-i18n="timers"></h4>
                             <div class="timer-section">
-                                <h5>秒表</h5>
+                                <h5 data-i18n="stopwatch"></h5>
                                 <div class="stopwatch-display" id="stopwatchDisplay">00:00:00</div>
                                 <div class="timer-buttons">
-                                    <button id="stopwatchStart">开始</button>
-                                    <button id="stopwatchPause">暂停</button>
-                                    <button id="stopwatchReset">重置</button>
+                                    <button id="stopwatchStart" data-i18n="start"></button>
+                                    <button id="stopwatchPause" data-i18n="pause"></button>
+                                    <button id="stopwatchReset" data-i18n="reset"></button>
                                 </div>
                             </div>
                             
                             <div class="timer-section">
-                                <h5>倒计时</h5>
+                                <h5 data-i18n="countdown"></h5>
                                 <div class="countdown-inputs">
-                                    <input type="number" id="countdownMinutes" placeholder="分钟" min="0" max="59">
-                                    <input type="number" id="countdownSeconds" placeholder="秒" min="0" max="59">
+                                    <input type="number" id="countdownMinutes" data-i18n-placeholder="minutes" min="0" max="59">
+                                    <input type="number" id="countdownSeconds" data-i18n-placeholder="seconds" min="0" max="59">
                                 </div>
                                 <div class="countdown-display" id="countdownDisplay">00:00</div>
                                 <div class="timer-buttons">
-                                    <button id="countdownStart">开始</button>
-                                    <button id="countdownPause">暂停</button>
-                                    <button id="countdownReset">重置</button>
+                                    <button id="countdownStart" data-i18n="start"></button>
+                                    <button id="countdownPause" data-i18n="pause"></button>
+                                    <button id="countdownReset" data-i18n="reset"></button>
                                 </div>
                             </div>
                             
                             <div class="timer-section">
-                                <h5>闹钟</h5>
+                                <h5 data-i18n="alarm"></h5>
                                 <div class="alarm-inputs">
                                     <input type="time" id="alarmTime">
-                                    <button id="addAlarm">添加闹钟</button>
+                                    <button id="addAlarm" data-i18n="add_alarm"></button>
                                 </div>
                                 <div class="alarm-list" id="alarmList"></div>
                             </div>
@@ -161,6 +161,7 @@ class EnhancedClock {
         
         clockArea.appendChild(this.currentClockElement);
         this.applyTheme();
+        i18n.translatePage(); // Translate new elements
     }
     
     createDigitalClock() {
@@ -309,8 +310,7 @@ class EnhancedClock {
         const panelContent = this.container.querySelector('#panelContent');
         
         panelToggle.addEventListener('click', () => {
-            panelContent.classList.toggle('collapsed');
-        });
+         panelContent.classList.toggle("show");       });
         
         // Clock mode change
         this.container.querySelector('#clockModeSelect').addEventListener('change', (e) => {
@@ -468,7 +468,7 @@ class EnhancedClock {
                 if (this.countdownTime === 0) {
                     this.pauseCountdown();
                     this.playAlarmSound();
-                    alert('倒计时结束！');
+                    alert(i18n.getMessage('countdown_finished'));
                 }
             }, 100);
         }
@@ -540,12 +540,13 @@ class EnhancedClock {
             alarmItem.innerHTML = `
                 <span class="alarm-time ${alarm.enabled ? 'enabled' : 'disabled'}">${alarm.time}</span>
                 <div class="alarm-controls">
-                    <button onclick="enhancedClock.toggleAlarm(${alarm.id})">${alarm.enabled ? '关闭' : '开启'}</button>
-                    <button onclick="enhancedClock.removeAlarm(${alarm.id})">删除</button>
+                    <button onclick="enhancedClock.toggleAlarm(${alarm.id})">${alarm.enabled ? i18n.getMessage('disable') : i18n.getMessage('enable')}</button>
+                    <button onclick="enhancedClock.removeAlarm(${alarm.id})" data-i18n="delete"></button>
                 </div>
             `;
             alarmList.appendChild(alarmItem);
         });
+        i18n.translatePage(); // Translate new elements
     }
     
     checkAlarms(currentTime) {
@@ -554,7 +555,7 @@ class EnhancedClock {
         this.alarms.forEach(alarm => {
             if (alarm.enabled && alarm.time === currentTimeString) {
                 this.playAlarmSound();
-                alert(`闹钟响了！时间：${alarm.time}`);
+                alert(`${i18n.getMessage('alarm_ringing')}${alarm.time}`);
                 // Disable the alarm after it rings
                 alarm.enabled = false;
                 this.updateAlarmList();
@@ -609,45 +610,37 @@ class EnhancedClock {
     }
     
     saveSettings() {
-        const settings = {
-            language: this.language,
-            clockMode: this.clockMode,
-            theme: this.theme,
-            timezone: this.timezone,
-            is24Hour: this.is24Hour,
-            showSeconds: this.showSeconds,
-            soundEnabled: this.soundEnabled,
-            alarms: this.alarms
-        };
-        
-        localStorage.setItem('enhancedClockSettings', JSON.stringify(settings));
+        localStorage.setItem('language', this.language);
+        localStorage.setItem('clockMode', this.clockMode);
+        localStorage.setItem('theme', this.theme);
+        localStorage.setItem('timezone', this.timezone);
+        localStorage.setItem('is24Hour', this.is24Hour);
+        localStorage.setItem('showSeconds', this.showSeconds);
+        localStorage.setItem('soundEnabled', this.soundEnabled);
+        localStorage.setItem('alarms', JSON.stringify(this.alarms));
     }
     
     loadSettings() {
-        const saved = localStorage.getItem('enhancedClockSettings');
-        if (saved) {
-            const settings = JSON.parse(saved);
+        this.language = localStorage.getItem('language') || i18n.currentLocale;
+        this.clockMode = localStorage.getItem('clockMode') || 'digital';
+        this.theme = localStorage.getItem('theme') || 'light';
+        this.timezone = localStorage.getItem('timezone') || Intl.DateTimeFormat().resolvedOptions().timeZone;
+        this.is24Hour = localStorage.getItem('is24Hour') === 'true';
+        this.showSeconds = localStorage.getItem('showSeconds') === 'true';
+        this.soundEnabled = localStorage.getItem('soundEnabled') === 'true';
+        this.alarms = JSON.parse(localStorage.getItem('alarms')) || [];
             
-            this.language = settings.language || this.language;
-            this.clockMode = settings.clockMode || this.clockMode;
-            this.theme = settings.theme || this.theme;
-            this.timezone = settings.timezone || this.timezone;
-            this.is24Hour = settings.is24Hour !== undefined ? settings.is24Hour : this.is24Hour;
-            this.showSeconds = settings.showSeconds !== undefined ? settings.showSeconds : this.showSeconds;
-            this.soundEnabled = settings.soundEnabled !== undefined ? settings.soundEnabled : this.soundEnabled;
-            this.alarms = settings.alarms || [];
+        // Update UI controls
+        this.container.querySelector('#clockModeSelect').value = this.clockMode;
+        this.container.querySelector('#themeSelect').value = this.theme;
+        this.container.querySelector('#timezoneSelect').value = this.timezone;
+        this.container.querySelector('#format24Hour').checked = this.is24Hour;
+        this.container.querySelector('#showSecondsCheck').checked = this.showSeconds;
+        this.container.querySelector('#soundEnabledCheck').checked = this.soundEnabled;
             
-            // Update UI controls
-            this.container.querySelector('#clockModeSelect').value = this.clockMode;
-            this.container.querySelector('#themeSelect').value = this.theme;
-            this.container.querySelector('#timezoneSelect').value = this.timezone;
-            this.container.querySelector('#format24Hour').checked = this.is24Hour;
-            this.container.querySelector('#showSecondsCheck').checked = this.showSeconds;
-            this.container.querySelector('#soundEnabledCheck').checked = this.soundEnabled;
-            
-            this.updateAlarmList();
-            this.applyTheme();
-        }
+        this.updateAlarmList();
+        this.applyTheme();
+        i18n.setLocale(this.language); // Set i18n locale
     }
     
     destroy() {
@@ -663,8 +656,9 @@ let enhancedClock;
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    const userLanguage = navigator.language || 'en-US';
-    enhancedClock = new EnhancedClock(userLanguage);
+    // Load i18n messages first
+    // Assuming i18n.js is loaded before this script
+    enhancedClock = new EnhancedClock();
     
     // Insert the clock into the page
     const clockContainer = document.createElement('div');

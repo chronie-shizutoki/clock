@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>增强版时钟组件</title>
+    <title data-i18n="enhanced_clock_component"></title>
     <link rel="stylesheet" href="enhanced-clock.css">
     <style>
         body {
@@ -27,7 +27,7 @@
         }
         
         .demo-info h4 {
-            margin: 0 0 10px 0;
+            margin-bottom: 10px;
             color: #00ffff;
         }
         
@@ -45,44 +45,75 @@
             padding-top: 10px;
             border-top: 1px solid rgba(255, 255, 255, 0.3);
         }
+
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .language-selector select {
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            background: #fff;
+        }
     </style>
 </head>
 <body>
+    <div class="language-selector">
+        <select id="languageSelect">
+            <option value="en-US">English</option>
+            <option value="zh-CN">简体中文</option>
+            <option value="ja-JP">日本語</option>
+        </select>
+    </div>
+
     <div class="demo-info">
-        <h4>功能说明</h4>
+        <h4 data-i18n="features_description"></h4>
         <ul>
-            <li>数字/模拟时钟切换</li>
-            <li>多主题支持（浅色/深色/霓虹）</li>
-            <li>时区选择</li>
-            <li>秒表功能</li>
-            <li>倒计时功能</li>
-            <li>闹钟功能</li>
-            <li>全屏模式</li>
-            <li>设置自动保存</li>
+            <li data-i18n="digital_analog_toggle"></li>
+            <li data-i18n="multi_theme_support"></li>
+            <li data-i18n="timezone_selection"></li>
+            <li data-i18n="stopwatch_functionality"></li>
+            <li data-i18n="countdown_functionality"></li>
+            <li data-i18n="alarm_functionality"></li>
+            <li data-i18n="fullscreen_mode_feature"></li>
+            <li data-i18n="settings_auto_save"></li>
         </ul>
         <div class="keyboard-shortcuts">
-            <strong>快捷键：</strong><br>
-            Ctrl+F: 全屏切换<br>
-            Ctrl+M: 时钟模式切换<br>
-            Ctrl+T: 主题切换
+            <strong data-i18n="keyboard_shortcuts"></strong><br>
+            <span data-i18n="ctrl_f_fullscreen"></span><br>
+            <span data-i18n="ctrl_m_mode_toggle"></span><br>
+            <span data-i18n="ctrl_t_theme_toggle"></span>
         </div>
     </div>
 
+    <script src="i18n.js"></script>
     <script src="enhanced-clock.js"></script>
     <script>
         // Language selector integration (if needed)
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener("DOMContentLoaded", function() {
             // Initialize i18n system
-            window.i18n = { locale: 'zh-CN' };
-            document.dispatchEvent(new Event('i18nInitialized'));
+            // window.i18n is already initialized by i18n.js
             
+            const languageSelect = document.getElementById("languageSelect");
+            languageSelect.value = i18n.currentLocale; // Set initial value
+            languageSelect.addEventListener("change", function() {
+                i18n.setLocale(this.value);
+            });
+
             // Add particle effects
             function createParticles() {
-                const clockArea = document.querySelector('.clock-display-area');
+                const clockArea = document.querySelector(".clock-display-area");
                 if (!clockArea) return;
                 
-                const particlesContainer = document.createElement('div');
-                particlesContainer.className = 'background-particles';
+                const particlesContainer = document.createElement("div");
+                particlesContainer.className = "background-particles";
                 particlesContainer.style.cssText = `
                     position: absolute;
                     top: 0;
@@ -94,8 +125,8 @@
                 `;
                 
                 for (let i = 0; i < 50; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
+                    const particle = document.createElement("div");
+                    particle.className = "particle";
                     particle.style.cssText = `
                         position: absolute;
                         width: ${Math.random() * 4 + 2}px;
@@ -119,26 +150,26 @@
         });
         
         // Handle fullscreen change events
-        document.addEventListener('fullscreenchange', function() {
+        document.addEventListener("fullscreenchange", function() {
             if (enhancedClock) {
                 enhancedClock.isFullscreen = !!document.fullscreenElement;
                 if (enhancedClock.isFullscreen) {
-                    enhancedClock.container.classList.add('fullscreen');
+                    enhancedClock.container.classList.add("fullscreen");
                 } else {
-                    enhancedClock.container.classList.remove('fullscreen');
+                    enhancedClock.container.classList.remove("fullscreen");
                 }
             }
         });
         
         // Handle visibility change to pause/resume timers when tab is not visible
-        document.addEventListener('visibilitychange', function() {
+        document.addEventListener("visibilitychange", function() {
             if (enhancedClock) {
                 if (document.hidden) {
                     // Tab is hidden, could pause non-essential animations
-                    console.log('Tab hidden - timers continue running');
+                    console.log("Tab hidden - timers continue running");
                 } else {
                     // Tab is visible again
-                    console.log('Tab visible - all features active');
+                    console.log("Tab visible - all features active");
                 }
             }
         });
